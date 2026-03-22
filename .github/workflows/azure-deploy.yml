@@ -23,7 +23,7 @@ jobs:
 
     - name: Build Docker image (Flask sample)
       run: |
-        docker build -t sample-flask:latest ./flask_app
+        docker build -t sample-flask:latest ./azure-python-cv-sample/flask_app
 
     - name: Deploy to Azure Web App using publish profile
       uses: azure/webapps-deploy@v2
