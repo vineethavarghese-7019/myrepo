@@ -28,5 +28,5 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: cv-flask-sample-2026
+        app-name: cv-flask-westus3-2026
         images: sample-flask:latest
