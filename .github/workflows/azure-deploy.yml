@@ -1,4 +1,4 @@
-name: Build and deploy Flask to Azure Web App (Docker)
+name: Build and deploy Flask to Azure Web App
 
 on:
   push:
@@ -13,20 +13,33 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        cd azure-python-cv-sample/flask_app
+        pip install -r requirements.txt
+
+    - name: Zip the app
+      run: |
+        cd azure-python-cv-sample/flask_app
+        zip -r ../../flask-app.zip .
 
     - name: Login to Azure
       run: |
         az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
         az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Build Docker image (Flask sample)
+    - name: Configure web app for Python runtime
       run: |
-        docker build -t sample-flask:latest ./azure-python-cv-sample/flask_app
+        az webapp config set --name cv-flask-westus3-2026 --resource-group cv-sample-rg-westus3 --linux-fx-version "PYTHON|3.11"
+        az webapp config appsettings set --name cv-flask-westus3-2026 --resource-group cv-sample-rg-westus3 --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: cv-flask-westus3-2026
-        images: sample-flask:latest
+        package: flask-app.zip

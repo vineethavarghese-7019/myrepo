@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/api/hello')
 def hello():
-    return jsonify({"message": "Hello from Flask!"})
+    return jsonify({"message": "Hello from vini!"})
 
 @app.route('/api/compute', methods=['POST'])
 def compute():
