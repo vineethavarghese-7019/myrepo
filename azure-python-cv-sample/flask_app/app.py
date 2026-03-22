@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 
+# Simple Flask app for Azure deployment
 app = Flask(__name__)
 
 @app.route('/api/hello')
