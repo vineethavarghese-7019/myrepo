@@ -1,4 +1,4 @@
-name: Build and deploy to Azure Web App (Docker)
+name: Build and deploy Flask to Azure Web App (Docker)
 
 on:
   push:
@@ -25,15 +25,9 @@ jobs:
       run: |
         docker build -t sample-flask:latest ./flask_app
 
-    - name: Build Docker image (Django sample)
-      run: |
-        docker build -t sample-django:latest ./django_app
-
     - name: Deploy to Azure Web App using publish profile
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        app-name: cv-flask-sample-2026
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: |
-          sample-flask:latest
-          sample-django:latest
+        images: sample-flask:latest
