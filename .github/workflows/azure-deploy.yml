@@ -13,21 +13,17 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Log in to Azure Container Registry (optional)
-      if: false
-      uses: azure/docker-login@v1
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Build Docker image (Flask sample)
       run: |
         docker build -t sample-flask:latest ./azure-python-cv-sample/flask_app
 
-    - name: Deploy to Azure Web App using publish profile
+    - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: cv-flask-sample-2026
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         images: sample-flask:latest
